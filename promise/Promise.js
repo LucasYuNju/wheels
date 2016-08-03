@@ -1,68 +1,96 @@
 class Promize {
-    constructor(task) {
-        this._state = "pending";
-        this._resolvedCallbacks = [];
-        this._rejectedCallbacks = [];
+    constructor(executor) {
+        this.state = "pending";
+        this.handlers = [];
         try {
-            task(this._resolve.bind(this), this._reject.bind(this));
+            // 立即执行，不需要异步调用
+            executor(this.resolve.bind(this), this.doReject.bind(this));
         } catch (e) {
-            this._reject();
+            this.doReject();
         }
     }
 
-    _resolve(result) {
-        setTimeout(() => {
-            if (this._state === "pending") {
-                this._state = "resolved";
-                this._result = result;
-                this._resolvedCallbacks.forEach(callback => {
-                    callback(this._result);
-                })
-            }
-        });
+    doResolve(result) {
+        this.state = "fulfilled";
+        this.value = result;
+        // 将handler交给this.hanle()统一处理
+        this.handlers.forEach(this.handle.bind(this));
+        this.handlers = null;
     }
 
-    _reject(reason) {
-        setTimeout(() => {
-            if (this._state === "pending") {
-                this._state = "rejected";
-                this._result = reason;
-                this._rejectedCallbacks.forEach(callback => {
-                    callback(this._result);
-                })
-            }
-        });
+    doReject(reason) {
+        this.state = "rejected";
+        this.value = reason;
+        this.handlers.forEach(this.handle.bind(this));
+        this.handlers = null;
     }
 
-    then(resolvedCallback, rejectedCallback) {
-        if (this._state === "pending") {
-            this._resolvedCallbacks.push(resolvedCallback);
-            this._rejectedCallbacks.push(rejectedCallback);
+    // doResolve的wrapper函数，能够处理参数为promise的情况
+    resolve(promise) {
+        let then = this.getThen(promise);
+        try {
+            if (then) {
+                then = then.bind(promise);
+                then(this.resolve.bind(this), this.doReject.bind(this));
+            }
+            else {
+                this.doResolve(promise);
+            }
+        } catch (e) {
+            this.doReject(e);
         }
-        else if (this._state === "resolved") {
+    }
+
+    // 返回Promise的then方法
+    getThen(promise) {
+        if (promise && typeof promise === "object") {
+            const then = promise.then;
+            if (then && typeof then === "function") {
+                return then;
+            }
+        }
+        return null;
+    }
+
+    // 执行onResolved和onRejected回调函数
+    handle(handler) {
+        if (this.state === "pending") {
+            this.handlers.push(handler);
+        }
+        else if (this.state === "fulfilled") {
             setTimeout(() => {
-                resolvedCallback(this._result);
-            });
+                handler.onResolved(this.value);
+            }, 0);
         }
         else {
             setTimeout(() => {
-                rejectedCallback(this._result);
-            });
+                handler.onRejected(this.value);
+            }, 0);
         }
+    }
+
+    then(onResolved, onRejected) {
+        return new Promize((resolve, reject) => {
+            const handler = {
+                onResolved: (result) => {
+                    try {
+                        const resolvedResult = onResolved(result);
+                        resolve(resolvedResult);
+                    } catch (e) {
+                        reject(e);
+                    }
+                },
+                onRejected: (error) => {
+                    try {
+                        resolve(onFulfilled(error));
+                    } catch (e) {
+                        reject(e);
+                    }
+                }
+            }
+            this.handle(handler);
+        });
     }
 }
 
-const promise = new Promize((resolve, reject) => {
-    // 立即执行，不需要异步调用
-    console.log("task start");
-    resolve(1);
-});
-
-// resolvedCallback要异步调用
-promise.then(result => {
-    console.log("result", result);
-}, reason => {
-    console.error(reason);
-});
-
-console.log("done");
+module.exports = Promize;
