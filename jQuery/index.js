@@ -1,13 +1,13 @@
 (() => {
     const w = window, d = document;
     const sakuraPrototype = {
-        forEach: [].forEach,
+        each: [].forEach,
         length: 0,
         selector: '',
         splice: [].splice,
         addClass: function(value) {
             var reg = new RegExp('(\\s|^)' + value + '(\\s|$)');
-            this.forEach(dom => {
+            this.each(dom => {
                 if (dom.className.match(reg)) {
                     dom.className == ' ' + value;
                 }
@@ -15,7 +15,7 @@
             return this;
         },
         css: function(attribute, value) {
-            this.forEach(dom => {
+            this.each(dom => {
                 if (arguments.length === 1) {
                     return getComputedStyle(dom, null)[attr];
                 }
@@ -28,13 +28,23 @@
             while ((current = current.nextSibling) && current.nodeType !== 1) {}
             return current;
         },
+        // TODO add filter
+        parent: function() {
+            const result = sakura();
+            this.each(dom => {
+                if (dom.parentNode !== null && dom.parentNode.nodeType !== 11) {
+                    [].push.call(result, dom.parentNode);
+                }
+            });
+            return result;
+        },
         prev: function() {
             let current = this;
             while ((current = current.previousSibling) && current.nodeType !== 1) {}
             return current;
         },
         text: function(value) {
-            this.forEach(dom => {
+            this.each(dom => {
                 if (arguments.length === 0)
                 {
                     return dom.innerText;
