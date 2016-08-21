@@ -52,6 +52,9 @@
             while ((current = current.previousSibling) && current.nodeType !== 1) {}
             return current;
         },
+        ready: function(callback) {
+            d.addEventListener('DOMContentLoaded', callback, false);
+        },
         text: function(value) {
             this.each(dom => {
                 if (arguments.length === 0)
@@ -63,8 +66,20 @@
         },
     };
     const sakura = function(selector) {
-        const doms = d.querySelectorAll(selector);
+        let doms = null;
         const result = Object.create(sakuraPrototype);
+        if (!selector) {
+            doms = [];
+        }
+        else if (typeof selector === 'object') {
+            dom = [selector];
+        }
+        else if(typeof selector === 'function') {
+            result.ready(selector);
+        }
+        else {
+            doms = d.querySelectorAll(selector);
+        }
         [].push.apply(result, doms);
         return result;
     }
