@@ -28,7 +28,7 @@
             while ((current = current.nextSibling) && current.nodeType !== 1) {}
             return current;
         },
-        // TODO add filter
+        // no filter
         parent: function() {
             const result = sakura();
             this.each(dom => {
@@ -38,6 +38,15 @@
             });
             return result;
         },
+        parents: function() {
+            const reslt = sakura();
+            this.each(dom => {
+                while ((dom = dom.parentNode) !== null && dom.parentNode.nodeType !== 11) {
+                    [].push.call(result, dom);
+                }
+            });
+            return result;
+        }
         prev: function() {
             let current = this;
             while ((current = current.previousSibling) && current.nodeType !== 1) {}
