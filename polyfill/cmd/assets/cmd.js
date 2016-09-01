@@ -12,15 +12,15 @@ function require(path)
     {
         const code = xhr.responseText;
         const wrappedCode = `
-            let definition = null;
-            definition = function (require, exports, module){
+            let define = null;
+            define = function (require, exports, module){
                 ${code}
             };`
-        const def = eval(wrappedCode);
+        const define = eval(wrappedCode);
         const module = {
             exports: {}
         }
-        def(require, module.exports, module);
+        define(require, module.exports, module);
         return module.exports;
     }
     else
