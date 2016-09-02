@@ -1,27 +1,38 @@
-html, body {
-    padding: 0;
+* {
     margin: 0;
+    padding: 0;
 }
 
 #container {
     position:relative;
-    overflow: hidden;
-    margin:0 auto;
-    width: 440px;
-    height: 220px;
-}
-// relative和absolute的关系
-.slides {
-    //为什么table不需要这么写
-    width: 2000px;
-    overflow: visible;
-    position: absolute;
-    margin: 0;
-    padding-left: 0;
-    border: 1px solid steelBlue;
+    width:440px;
+    height:220px;
+    margin:30px auto;
+    border:1px solid #9cc5ef;
+    overflow:hidden;
 }
 
-.slides li {
-    display: inline-block;
+#slides {
+    position: absolute;
+    width:300%;
+    height:100%;
     list-style: none;
+}
+
+#slides li {
+    width: 440px;
+    height: 220px;
+    float: left;
+}
+
+#slides li:nth-child(1) {
+    background-color: steelBlue;
+}
+
+#slides li:nth-child(2) {
+    background-color: gray;
+}
+
+#slides li:nth-child(3) {
+    background-color: cyan;
 }

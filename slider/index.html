@@ -5,27 +5,28 @@
     <title>Document</title>
     <link rel="stylesheet" href="assets/index.css" charset="utf-8">
     <script src="assets/util.js" charset="utf-8"></script>
-    <script src="assets/slide.js" charset="utf-8"></script>
+    <script src="assets/slider.js" charset="utf-8"></script>
 </head>
 <body>
     <div id="container">
-        <ul class="slides">
-            <li><img src="assets/resource/minecraft.webp" alt="" /></li>
-            <li><img src="assets/resource/cartoon.webp" alt="" /></li>
-            <li><img src="assets/resource/fashion.webp" alt="" /></li>
+        <ul id="slides">
+            <li>
+                <h2>1</h2>
+                <!-- <img src="assets/resource/minecraft.webp" alt="" /> -->
+            </li>
+            <li>
+                <h2>2</h2>
+                <!-- <img src="assets/resource/cartoon.webp" alt="" /> -->
+            </li>
+            <li>
+                <h2>3</h2>
+                <!-- <img src="assets/resource/fashion.webp" alt="" /> -->
+            </li>
         </ul>
     </div>
     
-    <!-- <table class="slides" >
-        <tr>
-            <td><img src="assets/resource/minecraft.webp" alt="" /></td>
-            <td><img src="assets/resource/cartoon.webp" alt="" /></td>
-            <td><img src="assets/resource/fashion.webp" alt="" /></td>
-        </tr>
-    </table> -->
-
     <script type="text/javascript">
-        const slider = new Slider(".slides");
+        const slider = new Slider("#slides");
         slider.tick();
     </script>
 </body>
