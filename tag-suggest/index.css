@@ -1,0 +1,43 @@
+html, body {
+    width: 100%;
+    height: 100%;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+#search-wrapper {
+    width: 200px;
+    height: 300px;
+    position: relative;
+    margin: 50px auto;
+}
+
+#search {
+    width: 200px;
+    height: 20px;
+}
+
+#suggest-wrapper {
+    position: absolute;
+    left: 0;
+    top: 25px;
+    width: 200px;
+    height: 250px;
+    overflow-y: scroll;
+}
+
+#suggest-list {
+    list-style: none;
+    z-index: 100;
+}
+
+#suggest-list li a {
+    text-decoration: none;
+}
+
+#suggest-list li a span {
+    background-color: cyan;
+}
