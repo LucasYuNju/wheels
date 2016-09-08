@@ -27,7 +27,10 @@
             };
             modules[url] = module;
         }
-    };
+        if(checkCircle(modules[url].deps, url)) {
+            throw new Error("Cyclic dependency");
+        }
+    }
     
     // 加载依赖，并且执行factory
     function require(deps, factory) {
@@ -37,16 +40,16 @@
             const module = {
                 deps: resolvedDeps,
                 callback: factory,
-                state: 1,    //2表示加载完成
+                state: 1,
             };
             modules[url] = module;
             loadings.unshift(url);
         }
-        if(checkCircle(deps, url)) {
+        if(checkCircle(modules[url].deps, url)) {
             throw new Error("Cyclic dependency");
         }
         loadDepsOfModule(url);
-    };
+    }
     
     function loadDepsOfModule(id) {
         const module = modules[id];
@@ -59,9 +62,10 @@
                 });
             }
         });
-    };
+    }
     
     function checkDeps() {
+        // TODO 越界问题
         for(let i = loadings.length - 1; i >= 0; i--) {
             const module = modules[loadings[i]];
             let depLoaded = true;
@@ -122,7 +126,7 @@
     
     function currentScriptSrc() {
         return document.currentScript.src;
-    };
+    }
     
     function resolvePath(id) {
         if(!id.endsWith(".js")) {
@@ -134,7 +138,7 @@
     function Module(url, deps, factory) {
         this.url = url;
         this.deps = deps;
-    };
+    }
         
     init();
     global.define = define;
