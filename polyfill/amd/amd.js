@@ -1,12 +1,21 @@
-// 写这段代码是为了加深对AMD的理解，参考了https://github.com/foio/MyRequireJS
+// 写这段代码是为了加深对AMD的理解，参考了司徒正美的博客
 (function(global) {
     const document = global.document;
     const modules = {};
-    const loadings = [];    //modules that are being loaded.
+    const loadings = [];    //依赖还没有加载的模块，用于判断循环依赖
     let baseUrl = "";
     
-    // 忽略id参数
-    function define(deps, factory) {
+    // 仅仅告诉AMD，将来要使用id当前模块的话，先把依赖加载进来，不会立即加载当前模块的依赖
+    //  参数id，deps可选
+    function define(id, deps, factory) {
+        if(id instanceof Function) {
+            factory = id;
+            deps = [];
+        }
+        else if(Array.isArray(id)) {
+            factory = deps;
+            deps = id;
+        }
         const url = currentScriptSrc();
         if(!modules[url]) {
             const resolvedDeps = deps.map(resolvePath);
@@ -20,6 +29,7 @@
         }
     };
     
+    // 加载依赖，并且执行callback
     function require(deps, factory) {
         const url = currentScriptSrc();
         if(!modules[url]) {
@@ -32,10 +42,12 @@
             modules[url] = module;
             loadings.unshift(url);
         }
+        if(checkCircle(deps, url)) {
+            throw new Error("Cyclic dependency");
+        }
         loadDepsOfModule(url);
     };
     
-    // 不考虑循环依赖的问题
     function loadDepsOfModule(id) {
         const module = modules[id];
         module.deps.forEach(depId => {
@@ -62,6 +74,17 @@
                 fireCallback(loadings[i]);
                 loadings.splice(i, 1);
                 checkDeps();
+            }
+        }
+    }
+    
+    function checkCircle(deps, id) {
+        for(let dep of deps) {
+            const module = modules[dep];
+            if(module) {
+                if(dep === id || checkCircle(module.deps, id)) {
+                    return true;
+                }
             }
         }
     }
