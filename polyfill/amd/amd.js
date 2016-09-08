@@ -1,12 +1,12 @@
-// 这段代码只是为了加深对AMD的理解，参考了https://github.com/foio/MyRequireJS
+// 写这段代码是为了加深对AMD的理解，参考了https://github.com/foio/MyRequireJS
 (function(global) {
     const document = global.document;
     const modules = {};
     const loadings = [];    //modules that are being loaded.
     let baseUrl = "";
     
-    // TODO url or id
-    function define(id, deps, factory) {
+    // 忽略id参数
+    function define(deps, factory) {
         const url = currentScriptSrc();
         if(!modules[url]) {
             const resolvedDeps = deps.map(resolvePath);
@@ -20,7 +20,7 @@
         }
     };
     
-    function require(id, deps, factory) {
+    function require(deps, factory) {
         const url = currentScriptSrc();
         if(!modules[url]) {
             const resolvedDeps = deps.map(resolvePath);
@@ -37,8 +37,6 @@
     
     // 不考虑循环依赖的问题
     function loadDepsOfModule(id) {
-        // console.log(JSON.stringify(modules));
-        // console.log(loadings);
         const module = modules[id];
         module.deps.forEach(depId => {
             if(!modules[depId]) {
@@ -85,7 +83,7 @@
         loadJs(mainEntry);
     }
     
-    // 利用script标签，加载js
+    // 核心方法，利用script标签，加载js
     function loadJs(url, callback) {
         const node = document.createElement("script");
         node.charset = "utf-8";
