@@ -5,8 +5,8 @@
     const loadings = [];    //依赖还没有加载的模块，用于判断循环依赖
     let baseUrl = "";
     
-    // 仅仅告诉AMD，将来要使用id当前模块的话，先把依赖加载进来，不会立即加载当前模块的依赖
-    //  参数id，deps可选
+    // 仅仅告诉AMD，将来要使用id指定的模块的话，先把依赖加载进来，然后执行factory
+    // 参数id，deps可选
     function define(id, deps, factory) {
         if(id instanceof Function) {
             factory = id;
@@ -29,7 +29,7 @@
         }
     };
     
-    // 加载依赖，并且执行callback
+    // 加载依赖，并且执行factory
     function require(deps, factory) {
         const url = currentScriptSrc();
         if(!modules[url]) {
