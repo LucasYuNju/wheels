@@ -6,7 +6,7 @@
     let baseUrl = "";
     
     // 仅仅告诉AMD，将来要使用id指定的模块的话，先把依赖加载进来，然后执行factory
-    // 参数id，deps可选
+    // 参数id，deps可选，为了简便，忽略了id参数，只使用url作为模块id
     function define(id, deps, factory) {
         if(id instanceof Function) {
             factory = id;

@@ -1,5 +1,5 @@
 console.log("b loaded");
-define(["a"], function() {
+define([], function() {
     return {
         sum: (m, n) => m + n
     }

@@ -3,7 +3,7 @@ class Promize {
         this.state = "pending";
         this.handlers = [];
         try {
-            // 立即执行，不需要异步调用
+            // 立即执行，不需要setTimeout
             executor(this.resolve.bind(this), this.doReject.bind(this));
         } catch (e) {
             this.doReject();
@@ -13,7 +13,7 @@ class Promize {
     doResolve(result) {
         this.state = "fulfilled";
         this.value = result;
-        // 将handler交给this.hanle()统一处理
+        // 将handler交给this.handle()统一处理
         this.handlers.forEach(this.handle.bind(this));
         this.handlers = [];
     }
