@@ -3,86 +3,75 @@ class Promize {
         this.state = "pending";
         this.handlers = [];
         try {
-            // 立即执行，不需要setTimeout
-            executor(this.resolve.bind(this), this.doReject.bind(this));
+            executor(this.resolve.bind(this), this.reject.bind(this));
         } catch (e) {
-            this.doReject();
+            this.reject();
         }
     }
 
-    doResolve(result) {
-        this.state = "fulfilled";
-        this.value = result;
-        // 将handler交给this.handle()统一处理
-        this.handlers.forEach(this.handle.bind(this));
-        this.handlers = [];
-    }
-
-    doReject(reason) {
+    reject(reason) {
         this.state = "rejected";
         this.value = reason;
-        this.handlers.forEach(this.handle.bind(this));
-        this.handlers = [];
-    }
-
-    // doResolve的wrapper函数，能够处理参数为promise的情况
-    resolve(promise) {
-        let then = this.getThen(promise);
-        try {
-            if (then) {
-                then.call(promise, this.resolve.bind(this), this.doReject.bind(this));
+        setTimeout(() => {
+            // 回调需要通过异步方式执行，用以保证一致可靠的执行顺序
+            if (this.handlers.length) {
+                this.handlers.forEach(this.handle.bind(this));
+                this.handlers = [];
             }
             else {
-                this.doResolve(promise);
+                throw new Error("Unhandled promise rejection:" + reason);
             }
-        } catch (e) {
-            this.doReject(e);
-        }
+        });
     }
 
-    // 返回Promise的then方法
-    getThen(promise) {
-        if (promise && typeof promise === "object") {
+    // resolve将当前promise的状态改为fullfilled。 
+    // 如果参数是promise的话，会等到参数promise状态改变之后，再修改当前promise状态
+    resolve(promise) {
+        if (promise && (typeof promise === "object" || typeof promise === 'function')) {
             const then = promise.then;
             if (then && typeof then === "function") {
-                return then;
+                then.call(promise, this.resolve.bind(this), this.reject.bind(this));
+                return;
             }
         }
-        return null;
+        this.state = "fulfilled";
+        this.value = promise;
+        setTimeout(() => {
+            this.handlers.forEach(this.handle.bind(this));
+            this.handlers = [];            
+        });
     }
 
-    // 执行onResolved和onRejected回调函数
+    // 在状态转变为fullfilled的时候，执行onResolved和onRejected回调函数。
     handle(handler) {
         if (this.state === "pending") {
             this.handlers.push(handler);
+            return;
         }
-        else if (this.state === "fulfilled") {
-            setTimeout(() => {
-                handler.onResolved(this.value);
-            }, 0);
-        }
-        else {
-            setTimeout(() => {
-                handler.onRejected(this.value);
-            }, 0);
-        }
+        // rejection handled
+        this.handled = true;
+        const cb = this.state === "fulfilled" ? handler.onResolved : handler.onRejected;
+        cb(this.value);
     }
 
+    // support promise chain
     then(onResolved, onRejected) {
         return new Promize((resolve, reject) => {
             const handler = {
                 onResolved: (result) => {
                     try {
-                        const resolvedResult = onResolved(result);
-                        resolve(resolvedResult);
-                    } catch (e) {
+                        resolve(onResolved ? onResolved(result) : result);                        
+                    }
+                    catch (e) {
                         reject(e);
                     }
                 },
                 onRejected: (error) => {
-                    try {
-                        resolve(onFulfilled(error));
-                    } catch (e) {
+                    // error bubbling
+                    try{
+                        reject(onRejected ? onRejected(error) : error);                        
+                    }
+                    catch (e) {
                         reject(e);
                     }
                 }

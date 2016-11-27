@@ -3,12 +3,12 @@ const Promize = require("./Promise");
 // naive test
 let promize = new Promize((resolve, reject) => {
     console.log("task start");
-    const delayPromize = new Promize((resolve, reject) => {
+    const delay = new Promize((resolve, reject) => {
         setTimeout(() => {
             resolve(1);
         }, 1000);
     });
-    resolve(delayPromize);
+    resolve(delay);
 });
 
 promize.then(result => {
@@ -28,3 +28,14 @@ promize.then(result => {
 })
 
 console.log("done");
+
+
+// new Promize((resolve, reject) => {
+//     reject("pikapika");
+// })
+// .then((result) => {
+//     console.log("result", result);
+// }, 
+// (error) => {
+//     console.log("error", error);
+// });    
