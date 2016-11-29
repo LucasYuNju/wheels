@@ -28,8 +28,8 @@ export function combineReducers(reducers) {
 // To ensure that you may only apply middleware once, applyMiddleware operates on createStore() rather than on store itself. 
 // Instead of (store, middlewares) => store, its signature is (...middlewares) => (createStore) => createStore.
 export function applyMiddleware(...middlewares) {
-    return (createStore) => (preloadedState, reducer, enhancer) => {
-        const store = createStore(preloadedState, reducer, enhancer);
+    return (createStore) => (preloadedState, reducer) => {
+        const store = createStore(preloadedState, reducer);
         middlewareAPI = {
             dispatch: store.dispatch,
             getState: store.getState,
@@ -43,7 +43,10 @@ export function applyMiddleware(...middlewares) {
     };
 }
 
-export function createStore(initialState, reducer) {
+export function createStore(initialState, reducer, enhancer) {
+    if (enhancer) {
+        return enhancer(createStore)(initialState, reducer);
+    }
     const listeners = [];
     let isDispatching = false;
     let state = initialState;
