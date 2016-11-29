@@ -30,13 +30,15 @@ export function combineReducers(reducers) {
 export function applyMiddleware(...middlewares) {
     return (createStore) => (preloadedState, reducer) => {
         const store = createStore(preloadedState, reducer);
-        middlewareAPI = {
-            dispatch: store.dispatch,
-            getState: store.getState,
-        };
+        let dispatch = store.dispatch;
         // signature of middleware: store => next => action => {}
+        const middlewareAPI = {
+          getState: store.getState,
+          // 此处是redux-thunk运作的关键，dispatch函数lazy evaluate，redux-thunk调用的是compose后的dispatch
+          dispatch: (action) => dispatch(action)
+        }
         chain = middlewares.map(middleware => {
-            return middleware(middlewareAPI);
+            return middleware({ dispatch, getState });
         });
         const dispatch = compose(...chain)(dispatch);
         return { ...store, dispatch };
