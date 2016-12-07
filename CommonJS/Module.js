@@ -2,6 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const runInNewContext = require('vm').runInNewContext;
 
+const cache = {};
+
 function Module(id, parent) {
   this.id = id;
   this.parent = parent;
@@ -30,10 +32,9 @@ Module.prototype = {
       throw new Error('Package ' + name + ' does not exist');
     }
     const code = fs.readFileSync(absolutePath, 'utf8');
-    this._evalExec(code);
+    this._sandboxExec(code);
     return this.exports;
   },
-
   _resolve: function (name) {
     if (!path.extname(name)) {
       name += '.js';
