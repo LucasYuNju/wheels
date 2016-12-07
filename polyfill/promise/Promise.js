@@ -36,10 +36,10 @@ class Promize {
         }
         this.state = "fulfilled";
         this.value = promise;
-        setTimeout(() => {
+        // setTimeout(() => {
             this.handlers.forEach(this.handle.bind(this));
             this.handlers = [];            
-        });
+        // });
     }
 
     // 在状态转变为fullfilled的时候，执行onResolved和onRejected回调函数。
