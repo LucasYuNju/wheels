@@ -2,40 +2,15 @@ const fs = require('fs');
 const path = require('path');
 const runInNewContext = require('vm').runInNewContext;
 
-const cache = {};
-
 function Module(id, parent) {
   this.id = id;
   this.parent = parent;
   this.exports = {};
 }
 
-Module.prototype = {
-  _evalExec: function(code) {
-    const define = eval('let define = null; define = function(require, exports, module) {' + code + '}');
-    define(this._require, this.exports, this);
-  },
-  _sandboxExec: function(code) {
-    const sandbox = {};
-    for (let key in global) {
-      sandbox[key] = global[key];
-    }
-    sandbox.global = sandbox;
-    sandbox.module = this;
-    sandbox.exports = this.exports;
-    sandbox.require = this._require;
-    return runInNewContext(code, sandbox);
-  },
-  _require: function(name) {
-    const absolutePath = this._resolve(name);
-    if (!absolutePath) {
-      throw new Error('Package ' + name + ' does not exist');
-    }
-    const code = fs.readFileSync(absolutePath, 'utf8');
-    this._sandboxExec(code);
-    return this.exports;
-  },
-  _resolve: function (name) {
+Module._cache = {};
+
+Module._resolve = function (name) {
     if (!path.extname(name)) {
       name += '.js';
     }
@@ -58,6 +33,38 @@ Module.prototype = {
     }
     return null;
   }
+
+Module.prototype = {
+  _evalExec: function(code) {
+    const define = eval('let define = null; define = function(require, exports, module) {' + code + '}');
+    define(this._require, this.exports, this);
+  },
+  _sandboxExec: function(code) {
+    const sandbox = {};
+    for (let key in global) {
+      sandbox[key] = global[key];
+    }
+    sandbox.global = sandbox;
+    sandbox.module = this;
+    sandbox.exports = this.exports;
+    sandbox.require = this._require;
+    return runInNewContext(code, sandbox);
+  },
+  _load(name, parent): {
+    const filePath = Module._resolve(name);
+    if (!filePath) {
+      throw new Error('Package ' + name + ' does not exist');
+    }
+    if (Module._cache[filePath]) {
+      return Module._cache[filePath];
+    }
+    const code = fs.readFileSync(filePath, 'utf8');
+    this._sandboxExec(code);
+    return this.exports;
+  },
+  _require: function(name) {
+    this.load(name, this)
+  },
 }
 
 module.exports = Module;
