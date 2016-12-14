@@ -1,8 +1,8 @@
-const EventEmitter = require('events').EventEmitter;
+const EventEmitter = require('./index');
 const emitter = new EventEmitter();
 
-const logger = () => {
-    console.log("received");
+const logger = (...args) => {
+    console.log("received", ...args);
 };
 
 emitter.on("message", logger);

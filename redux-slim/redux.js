@@ -64,9 +64,7 @@ export function createStore(initialState, reducer, enhancer) {
         finally {
             isDispatching = false;
         }
-        listeners.forEach(function(listener) {
-          listener();
-        });
+        listeners.forEach(listener => listener());
         return action;
     }
 

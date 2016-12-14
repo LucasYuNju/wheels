@@ -5,7 +5,7 @@ class EventEmitter {
 
     emit(event, ...args) {
         if (this.listeners[event]) {
-            this.listeners[event].forEach(callback => callback(args));
+            this.listeners[event].forEach(callback => callback(...args));
         }
     }
 
@@ -36,3 +36,5 @@ class EventEmitter {
         }
     }
 }
+
+module.exports = EventEmitter;
