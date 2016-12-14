@@ -20,7 +20,7 @@ export function comopse(...methods) {
 export function combineReducers(reducers) {
     return (state = {}, action) => mapValues(reducers, (reducer, key) => {
         reducer(state[key], action);
-    })
+    });
 }
 
 // returns a store(createStore) enhancer
@@ -64,7 +64,9 @@ export function createStore(initialState, reducer, enhancer) {
         finally {
             isDispatching = false;
         }
-        listeners.forEach(listener => listener());
+        listeners.forEach(function(listener) {
+          listener();
+        });
         return action;
     }
 
