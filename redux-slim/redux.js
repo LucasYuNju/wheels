@@ -25,7 +25,7 @@ export function combineReducers(reducers) {
 
 // returns a store(createStore) enhancer
 // Quoted from redux doc:
-// To ensure that you may only apply middleware once, applyMiddleware operates on createStore() rather than on store itself. 
+// To ensure that you may only apply middleware once, applyMiddleware operates on createStore() rather than on store itself.
 // Instead of (store, middlewares) => store, its signature is (...middlewares) => (createStore) => createStore.
 export function applyMiddleware(...middlewares) {
     return (createStore) => (preloadedState, reducer) => {
@@ -52,7 +52,7 @@ export function createStore(initialState, reducer, enhancer) {
     const listeners = [];
     let isDispatching = false;
     let state = initialState;
-    
+
     function dispatch(action) {
         if (isDispatching) {
             throw new Error('Reducer may not dispatch action');
@@ -64,26 +64,26 @@ export function createStore(initialState, reducer, enhancer) {
         finally {
             isDispatching = false;
         }
-        listeners.forEach(listener);
+        listeners.forEach(listener => listener());
         return action;
     }
-    
+
     function getState() {
         return state;
     }
-    
+
     function replaceReducer(newReducer) {
         reducer = newReducer;
     }
-    
+
     function subscribe(callback) {
         listeners.push(callback);
-        
+
         return function unsubscribe() {
             listeners.splice(listeners.indexOf(callback), 1);
         }
     }
-    
+
     return {
         dispatch,
         getState,
