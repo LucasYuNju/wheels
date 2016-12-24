@@ -1,18 +1,47 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+
+import List from './List';
 import './App.css';
+
+const styles = {
+  noteList: {
+    margin: '10px',
+    width: '400px',
+    height: '400px',
+    border: '1px solid steelBlue',
+    overflow: 'scroll',
+  },
+  note: {
+    height: '60px',
+    borderBottom: '1px solid cyan'
+  },
+}
 
 class App extends Component {
   render() {
+    const notes = Array.from(Array(200).keys());
     return (
       <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
-        </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        <List
+          containerHeight={400}
+          elementHeight={60}
+          style={styles.noteList}
+          className="note-list"
+        >
+          {notes.map(this.renderItem)}
+        </List>
+      </div>
+    );
+  }
+
+  renderItem(note) {
+    return (
+      <div
+        className="note"
+        style={styles.note}
+        key={note}
+      >
+        <span>{note}</span>
       </div>
     );
   }
