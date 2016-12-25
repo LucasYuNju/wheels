@@ -30,9 +30,9 @@ class List extends Component {
 
     return (
       <div
-        onScroll={this.handleScroll}
         className={className}
         style={style}
+        ref="container"
       >
         <div
           className="content"
@@ -42,6 +42,16 @@ class List extends Component {
         </div>
       </div>
     );
+  }
+
+  componentDidMount() {
+    this.refs.container.addEventListener("scroll", this.handleScroll, {
+      passive: false
+    });
+  }
+
+  ComponentWillUnmount() {
+    this.refs.container.removeEventListener("scroll", this.handleScroll);
   }
 
   extendChild = (child, i) => {

@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 // import Infinite from 'react-infinite';
 
-import List from './List';
 import './App.css';
+import List from './List';
+import PassiveList from './PassiveList';
 
 const data = [
   {
@@ -46,6 +47,16 @@ class App extends Component {
           >
             {images.map(this.renderImage)}
           </List>
+        </div>
+        <div className="gallery-container">
+          <h3>Virtual list(with passive event listener)</h3>
+          <PassiveList
+            containerHeight={480}
+            elementHeight={80}
+            className="gallery"
+          >
+            {images.map(this.renderImage)}
+          </PassiveList>
         </div>
       </div>
     );
