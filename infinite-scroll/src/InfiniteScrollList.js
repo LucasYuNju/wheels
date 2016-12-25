@@ -1,6 +1,6 @@
 import React, { cloneElement, Component, PropTypes } from 'react';
 
-class List extends Component {
+class InfiniteScrollList extends Component {
   static propTypes = {
     containerHeight: PropTypes.number.isRequired,
     elementHeight: PropTypes.number.isRequired,
@@ -14,7 +14,6 @@ class List extends Component {
   constructor(props) {
     super(props);
     this.length = Math.floor(this.props.containerHeight / this.props.elementHeight) + 6;
-    this.sum = 1;
     this.state = {
       offset: 0,
     };
@@ -58,13 +57,10 @@ class List extends Component {
 
   handleScroll = (e) => {
     const scrollTop = e.target.scrollTop;
-    for (let i = 0; i < 100000000; i++) {
-      this.sum *= i;
-    }
     this.setState({
       offset: Math.round(scrollTop / this.props.elementHeight) - 3,
     });
   }
 }
 
-export default List;
+export default InfiniteScrollList;

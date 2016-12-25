@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 // import Infinite from 'react-infinite';
 
 import './App.css';
-import List from './List';
-import PassiveList from './PassiveList';
+import InfiniteScrollList from './InfiniteScrollList';
+import PassiveEventList from './PassiveEventList';
 
 const data = [
   {
@@ -40,23 +40,34 @@ class App extends Component {
         </div>
         <div className="gallery-container">
           <h3>Virtual list</h3>
-          <List
+          <InfiniteScrollList
             containerHeight={480}
             elementHeight={80}
             className="gallery"
           >
             {images.map(this.renderImage)}
-          </List>
+          </InfiniteScrollList>
+        </div>
+
+        <hr />
+        <span>目前看不出有什么区别</span>
+        <div className="gallery-container">
+          <h3>List that blocks scrolling</h3>
+          <div
+            className="gallery"
+            onScroll={this.sleep}
+          >
+            {images.map(this.renderImage)}
+          </div>
         </div>
         <div className="gallery-container">
-          <h3>Virtual list(with passive event listener)</h3>
-          <PassiveList
-            containerHeight={480}
-            elementHeight={80}
+          <h3>List optimized with passive event</h3>
+          <PassiveEventList
             className="gallery"
+            onScroll={this.sleep}
           >
             {images.map(this.renderImage)}
-          </PassiveList>
+          </PassiveEventList>
         </div>
       </div>
     );
@@ -72,6 +83,12 @@ class App extends Component {
         <span className="info">{image.info}</span>
       </div>
     );
+  }
+
+  sleep() {
+    const seconds = 0.2;
+    const waitTill = new Date(new Date().getTime() + seconds * 1000);
+    while(waitTill > new Date()){}
   }
 }
 
