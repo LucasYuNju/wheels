@@ -7,13 +7,13 @@ class PassiveEventList extends Component {
     children: PropTypes.arrayOf(
       PropTypes.element
     ),
-    onScroll: PropTypes.func.isRequired,
+    onWheel: PropTypes.func.isRequired,
   }
 
   render() {
     const {
       children,
-      onScroll,
+      onWheel,
       ...other,
     } = this.props;
     console.log(other);
@@ -28,13 +28,13 @@ class PassiveEventList extends Component {
   }
 
   componentDidMount() {
-    this.refs.container.addEventListener("scroll", this.props.onScroll, {
+    this.refs.container.addEventListener("scroll", this.props.onWheel, {
       passive: true
     });
   }
 
   ComponentWillUnmount() {
-    this.refs.container.removeEventListener("scroll", this.props.onScroll);
+    this.refs.container.removeEventListener("scroll", this.props.onWheel);
   }
 }
 

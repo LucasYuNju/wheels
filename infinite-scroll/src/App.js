@@ -33,13 +33,13 @@ class App extends Component {
     return (
       <div className=".app">
         <div className="gallery-container">
-          <h3>Real list</h3>
+          <h3>Normal list</h3>
           <div className="gallery">
             {images.map(this.renderImage)}
           </div>
         </div>
         <div className="gallery-container">
-          <h3>Virtual list</h3>
+          <h3>Infinite scroll list</h3>
           <InfiniteScrollList
             containerHeight={480}
             elementHeight={80}
@@ -50,12 +50,12 @@ class App extends Component {
         </div>
 
         <hr />
-        <span>目前看不出有什么区别</span>
+        <p>passive event只适用于wheel, touch等事件，因为scroll事件不能preventDefault。在fireefix v50上，passive event的优化效果很明显</p>
         <div className="gallery-container">
           <h3>List that blocks scrolling</h3>
           <div
             className="gallery"
-            onScroll={this.sleep}
+            onWheel={this.sleep}
           >
             {images.map(this.renderImage)}
           </div>
@@ -64,7 +64,7 @@ class App extends Component {
           <h3>List optimized with passive event</h3>
           <PassiveEventList
             className="gallery"
-            onScroll={this.sleep}
+            onWheel={this.sleep}
           >
             {images.map(this.renderImage)}
           </PassiveEventList>
@@ -85,8 +85,8 @@ class App extends Component {
     );
   }
 
-  sleep() {
-    const seconds = 0.2;
+  sleep(e) {
+    const seconds = 0.1;
     const waitTill = new Date(new Date().getTime() + seconds * 1000);
     while(waitTill > new Date()){}
   }
