@@ -11,17 +11,13 @@ class List extends Component {
     style: PropTypes.object,
   }
 
-  constructor(...props) {
-    super(...props);
+  constructor(props) {
+    super(props);
+    this.length = Math.floor(this.props.containerHeight / this.props.elementHeight) + 6;
+    this.sum = 1;
     this.state = {
-      from: 0,
-      numDom: Math.floor(this.props.containerHeight / this.props.elementHeight) + 2,
+      offset: 0,
     };
-    console.log(this.state);
-  }
-
-  componentWillReceiveProps(nextProps) {
-
   }
 
   render() {
@@ -39,6 +35,7 @@ class List extends Component {
         style={style}
       >
         <div
+          className="content"
           style={{height: children.length * elementHeight, position:'relative' }}
         >
           {children.map(this.extendChild)}
@@ -48,8 +45,9 @@ class List extends Component {
   }
 
   extendChild = (child, i) => {
-    if (this.state.from <= i && i <= this.state.from + this.state.numDom) {
+    if (this.state.offset <= i && i < this.state.offset + this.length) {
       return cloneElement(child, {
+        key: i - this.state.offset,
         style: Object.assign({}, child.style, {
           position: 'absolute',
           top: i * this.props.elementHeight,
@@ -60,9 +58,11 @@ class List extends Component {
 
   handleScroll = (e) => {
     const scrollTop = e.target.scrollTop;
-    const from = scrollTop / this.props.elementHeight;
+    for (let i = 0; i < 10000000; i++) {
+      this.sum *= i;
+    }
     this.setState({
-      from,
+      offset: Math.round(scrollTop / this.props.elementHeight) - 3,
     });
   }
 }

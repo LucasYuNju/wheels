@@ -1,47 +1,64 @@
 import React, { Component } from 'react';
+// import Infinite from 'react-infinite';
 
 import List from './List';
 import './App.css';
 
-const styles = {
-  noteList: {
-    margin: '10px',
-    width: '400px',
-    height: '400px',
-    border: '1px solid steelBlue',
-    overflow: 'scroll',
+const data = [
+  {
+    url: 'images/fireworks.jpg',
+    info: "A fireworks display",
   },
-  note: {
-    height: '60px',
-    borderBottom: '1px solid cyan'
+  {
+    url: 'images/bigben.jpg',
+    info: "The famous clock",
   },
-}
+  {
+    url: 'images/coffee.jpg',
+    info: "A cup of black coffee",
+  },
+  {
+    url: 'images/rose.jpg',
+    info: "A red, red rose",
+  },
+];
 
 class App extends Component {
   render() {
-    const notes = Array.from(Array(200).keys());
+    let images = [];
+    for (let i = 0; i < 100; i++) {
+      images = images.concat(data);
+    }
     return (
-      <div className="App">
-        <List
-          containerHeight={400}
-          elementHeight={60}
-          style={styles.noteList}
-          className="note-list"
-        >
-          {notes.map(this.renderItem)}
-        </List>
+      <div className=".app">
+        <div className="gallery-container">
+          <h3>Real list</h3>
+          <div className="gallery">
+            {images.map(this.renderImage)}
+          </div>
+        </div>
+        <div className="gallery-container">
+          <h3>Virtual list</h3>
+          <List
+            containerHeight={480}
+            elementHeight={80}
+            className="gallery"
+          >
+            {images.map(this.renderImage)}
+          </List>
+        </div>
       </div>
     );
   }
 
-  renderItem(note) {
+  renderImage(image, i) {
     return (
       <div
-        className="note"
-        style={styles.note}
-        key={note}
+        className="image"
+        key={i}
       >
-        <span>{note}</span>
+        <img alt={image.url} src={image.url} />
+        <span className="info">{image.info}</span>
       </div>
     );
   }
