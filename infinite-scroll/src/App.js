@@ -50,7 +50,7 @@ class App extends Component {
         </div>
 
         <hr />
-        <p>passive event只适用于wheel, touch等事件，因为scroll事件不能preventDefault。在fireefix v50上，passive event的优化效果很明显</p>
+        <p>passive event只适用于wheel, touch等事件。在firefox ver50上，优化效果很明显</p>
         <div className="gallery-container">
           <h3>List that blocks scrolling</h3>
           <div

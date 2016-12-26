@@ -16,7 +16,6 @@ class PassiveEventList extends Component {
       onWheel,
       ...other,
     } = this.props;
-    console.log(other);
     return (
       <div
         {...other}
@@ -28,13 +27,13 @@ class PassiveEventList extends Component {
   }
 
   componentDidMount() {
-    this.refs.container.addEventListener("scroll", this.props.onWheel, {
+    this.refs.container.addEventListener("wheel", this.props.onWheel, {
       passive: true
     });
   }
 
   ComponentWillUnmount() {
-    this.refs.container.removeEventListener("scroll", this.props.onWheel);
+    this.refs.container.removeEventListener("wheel", this.props.onWheel);
   }
 }
 

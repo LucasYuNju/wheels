@@ -20,13 +20,7 @@ class InfiniteScrollList extends Component {
   }
 
   render() {
-    const {
-      children,
-      elementHeight,
-      className,
-      style,
-    } = this.props;
-
+    const { children, className, elementHeight, style } = this.props;
     return (
       <div
         onScroll={this.handleScroll}
