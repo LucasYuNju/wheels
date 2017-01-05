@@ -50,7 +50,8 @@ class App extends Component {
         </div>
 
         <hr />
-        <p>passive event只适用于wheel, touch等事件。在firefox ver50上，优化效果很明显</p>
+        <p>passive event只适用于wheel, touch等事件。</p>
+        <p>这里有个React的SyntheticEvent的坑，SyntheticEvent使用委托实现的，<strong>不要</strong>在同一个页面中同时测试普通event和passive event</p>
         <div className="gallery-container">
           <h3>List that blocks scrolling</h3>
           <div
@@ -60,6 +61,7 @@ class App extends Component {
             {images.map(this.renderImage)}
           </div>
         </div>
+
         <div className="gallery-container">
           <h3>List optimized with passive event</h3>
           <PassiveEventList
@@ -89,6 +91,7 @@ class App extends Component {
     const seconds = 0.1;
     const waitTill = new Date(new Date().getTime() + seconds * 1000);
     while(waitTill > new Date()){}
+    console.log('delayed');
   }
 }
 
