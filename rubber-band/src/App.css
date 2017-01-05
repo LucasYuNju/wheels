@@ -1,0 +1,36 @@
+.app {
+  text-align: center;
+}
+
+.gallery-container {
+  display: inline-block;
+}
+
+.gallery {
+  margin: 10px;
+  width: 350px;
+  height: 480px;
+  border: 1px solid steelBlue;
+  overflow: scroll;
+}
+
+.gallery .image {
+  padding: 5px;
+  height: 80px;
+  width: 100%;
+  border-bottom: 1px solid #ccc;
+}
+
+.gallery .image img {
+  float: left;
+  width: auto;
+  height: 100%;
+}
+
+.gallery .image .info {
+  float: left;
+  margin-left: 5px;
+  display: inline-block;
+  height: 100%;
+  line-height: 49px;
+}
