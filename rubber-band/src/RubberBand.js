@@ -1,30 +1,50 @@
 import React, { Component, PropTypes } from 'react';
 
+const ALPHA = 0.85;
 const MAX_BUFFER_HEIGHT = 150;
-
-function round(value) {
-  if (value <= 0.95) return Math.round(value * 1000) / 1000;
-  else if (value <= 0.975) return Math.round(value * 10000) / 10000;
-  else return Math.round(value * 100000) / 100000;
-}
 
 const bufferStyle = {
   height: 0,
-  width: '100%',
 };
 
-const ALPHA = 0.85;
+// dynamics/bounce
+const springBounceFactory = (options) => {
+  const frequency = Math.max(1, options.frequency / 20);
+  const friction = Math.pow(20, options.friction / 100);
+  const A = (t) => Math.pow(friction / 10,-t) * (1 - t);
+  const fn = (t) => {
+    const b = -3.14/2;
+    const a = 1;
+    const angle = frequency * t * a + b;
+    return (A(t) * Math.cos(angle));
+  };
+  return fn;
+
+  // const frequency = Math.max(1, options.frequency / 20);
+  // const friction = 20 ** (options.friction / 100);
+  // return (t) => {
+  //   return 1 - ((friction / 10) ** (-t) * (1 - t) * Math.cos(frequency * t));
+  // };
+};
+const springBounce = springBounceFactory({
+  frequency: 250,
+  friction: 300,
+})
 
 class RubberBand extends Component {
   static propTypes = {
     children: PropTypes.node,
   };
 
+  state = {
+    targetHeight: 0,
+  };
+
   render() {
     const { children, ...other } = this.props;
     return (
-      <div {...other} ref="element" onWheel={this.handleWheel}>
-        <div ref="topBuffer" className="top-buffer" style={bufferStyle} />
+      <div {...other} ref="element" onWheel={this.newHandleWheel}>
+        <div ref="topBuffer" className="top-buffer" style={{ height: this.state.currentHeight }} />
           {children}
         <div ref="bottomBuffer" className="bottom-buffer" style={bufferStyle} />
       </div>
@@ -37,51 +57,54 @@ class RubberBand extends Component {
     });
   }
 
-  ComponentWillUnmount() {
+  componentWillUnmount() {
     this.refs.element.removeEventListener("wheel", this.props.onWheel);
   }
 
-  handleWheel = (e) => {
-    const event = e.nativeEvent;
-    const { element, topBuffer, bottomBuffer } = this.refs;
-    // console.error(event.deltaY);
-    if (!this.isOverscrolled) {
-      this.isOverscrolled = element.scrollTop + event.deltaY < 0 ||
-        element.scrollHeight - element.scrollTop <= element.clientHeight;
-    }
-    else {
-      // Show top buffer
-      if (element.scrollTop + event.deltaY < 0 && event.deltaY < 0) {
-        // 平滑处理
-        if (!this.smoothedDeltaY) {
-          this.smoothedDeltaY = event.deltaY;
-        }
-        else {
-          this.smoothedDeltaY = ALPHA * this.smoothedDeltaY + (1 - ALPHA) * event.deltaY;
-        }
-
-        // [0, 1000] => [0, 150]
-        const height = Math.log(1 + Math.abs(this.smoothedDeltaY / 100)) * 150;
-        topBuffer.style.height = height + 'px';
-        console.log(event.deltaY, topBuffer.style.height);
-
-        if (topBuffer.style.height <= 1) {
-          element.scrollTop = topBuffer.style.height;
-        } else {
-          element.scrollTop = 1;
-        }
-      }
-      else if (element.scrollHeight - element.scrollTop <= element.clientHeight && event.deltaY > 0) {
-        // Show bottom buffer
-        let newScroll = event.deltaY - 1 + parseInt(bottomBuffer.style.height);
-        let position = round(1 + Math.log10((MAX_BUFFER_HEIGHT - newScroll) / MAX_BUFFER_HEIGHT));
-        bottomBuffer.style.height = (MAX_BUFFER_HEIGHT - position * MAX_BUFFER_HEIGHT) + 'px';
-      }
-      else {
-        this.isOverscrolled = false;
-      }
+  componentDidUpdate() {
+    if (this.state.targetHeight) {
+       window.requestAnimationFrame(() => {
+         this.settle();
+       });
     }
   }
+
+  settle() {
+    const t = (Date.now() - this.state.startTime) / 1400;
+    const currentHeight = this.state.lastDragHeight + springBounce(t) * (this.state.targetHeight - this.state.lastDragHeight);
+    const shouldFinish = false;
+    // console.log('spring', springBounce(t), shouldFinish);
+
+    if (shouldFinish) {
+      this.setState({
+        currentHeight: 0,
+      });
+    }
+    else {
+      this.setState({
+        currentHeight,
+      });
+    }
+  }
+
+  newHandleWheel = (e) => {
+    const velocity = Math.abs(e.deltaY) / 3;
+    let targetHeight = 0;
+    if (!this.state.targetHeight) {
+      targetHeight = 100;
+      this.setState({
+        targetHeight,
+        currentHeight: 0,
+        lastDragHeight: 0,
+        startTime: new Date(),
+      });
+
+    }
+    // const targetHeight = this.state.targetHeight + velocity;
+
+    // const targetHeight = 100;
+    // settle
+  };
 }
 
 export default RubberBand;
