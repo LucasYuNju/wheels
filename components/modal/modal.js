@@ -26,10 +26,8 @@ window.modal = function({
 
   $(parentSelector).append($modal);
 
-  const modal = document.querySelector('.modal');
-  document.addEventListener('click', (e) => {
-    if (e.target === modal) {
-      modal.style.display = 'none';
-    }
-  })
+  $('.modal .modal-footer button').one('click', function(e) {
+    console.log('button clicked', e.currentTarget.dataset.label);
+    $('.modal').remove();
+  });
 }
