@@ -3,7 +3,7 @@ window.modal = function({
   message,
   buttons = {
     Cancel: {
-      label: 'Cancel'
+      label: '取消'
     }
   },
   parentSelector = 'body',
@@ -18,6 +18,7 @@ window.modal = function({
     </div>
   `;
   const $modal = $(template);
+  $modal.find('.modal-header').text(title);
   $modal.find('.modal-body').text(message);
   for(let key in buttons) {
     const $button = $(`<button data-label="${key}">${buttons[key].label}</button>`);
