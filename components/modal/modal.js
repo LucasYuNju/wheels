@@ -1,29 +1,18 @@
+// 这里只是最简单的实现，完整的接口，应该包含显示时间，用于关闭的函数，以及被关闭时的回调函数，以及窗口宽高等
 window.modal = function({
-  title,
   message,
-  buttons = {
-    Cancel: {
-      label: '取消'
-    }
-  },
   parentSelector = 'body',
 }) {
   const template = `
     <div class="modal">
       <div class="modal-content">
-        <div class="modal-header"><b>Header</b></div>
-        <div class="modal-body">Content</div>
-        <div class="modal-footer"></div>
+        <div class="message"></div>
+        <span class="close-button">+</span>
       </div>
     </div>
   `;
   const $modal = $(template);
-  $modal.find('.modal-header').text(title);
-  $modal.find('.modal-body').text(message);
-  for(let key in buttons) {
-    const $button = $(`<button data-label="${key}">${buttons[key].label}</button>`);
-    $modal.find('.modal-footer').append($button);
-  }
+  $modal.find('.messgae').text(message);
 
   $(parentSelector).append($modal);
 

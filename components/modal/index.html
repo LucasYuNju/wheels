@@ -12,20 +12,12 @@
   <script src="https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
   <script src="modal.js" charset="utf-8"></script>
   <script>
-    $('button').click(() => {
+    const showBtn = document.getElementsByClassName('button')[];
+    showBtn.addEventListener('click', () => {
       modal({
-        title: 'Minions are singing',
         message: 'Ba-ba-ba-ba-ba-nana, ba-ba-ba-ba-ba-nana',
-        buttons: {
-          confirm: {
-            label: '确认',
-          },
-          cancel: {
-            label: '取消',
-          },
-        },
         parentSelector: '#container',
-        callback: (msg) => {}
+        callback: () => { console.log('modal closed') }
       });
     });
   </script>

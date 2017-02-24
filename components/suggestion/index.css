@@ -15,7 +15,7 @@ html, body {
     margin: 50px auto;
 }
 
-#search {
+#search-input {
     width: 200px;
     height: 20px;
 }
@@ -40,4 +40,8 @@ html, body {
 
 #suggest-list li a span {
     background-color: cyan;
+}
+
+.selected {
+  background: blue;
 }
