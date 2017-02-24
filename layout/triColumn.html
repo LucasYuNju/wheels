@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <style media="screen">
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    div {
+      display: inline-block;
+      height: 100%;
+    }
+    .left, .right {
+      width: 200px;
+      background: blue;
+    }
+    .middle {
+      background: gray;
+      width: calc(100% - 400px);
+    }
+  </style>
+</head>
+<body>
+  <div class="left">left</div><div class="middle">middle</div><div class="right">right</div>
+</body>
+</html>
