@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <style media="screen">
+    html, body {
+      margin: 0;
+      padding: 0;
+    }
+    #container {
+      position: relative;
+      height: 100px;
+      border: 1px solid gray;
+      padding-left: 10px;
+    }
+    #box {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100px;
+      bottom: 0;
+      width: 100px;
+      background: blue;
+      /*transition: left 1000ms ease-out;*/
+      transition: transform 1000ms ease-out;
+    }
+    #box.begin {
+      left: 0;
+    }
+    #box.end {
+      transform: translateX(calc(100vw - 100px));
+      /*left: calc(100vw - 100px);*/
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <div id="box" class="begin"></div>
+  </div>
+  <script>
+    // 测试对比了一下transform动画和left动画，环境Macbook 2014 Late2013, Chrome v58
+    // 从chrome DevTools的Performance来看，两者都能达到60帧，但是left动画，经常会突然跌到30帧
+    const box = document.getElementById('box');
+    setInterval(() => {
+      box.classList.toggle('begin');
+      box.classList.toggle('end');
+    }, 1000);
+  </script>
+  <script src="index.js" charset="utf-8"></script>
+</body>
+</html>
