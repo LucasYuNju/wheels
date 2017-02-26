@@ -7,14 +7,11 @@
 </head>
 <body>
   <h1>Modal example</h1>
-  <button>Show modal</button>
   <div id="container"></div>
-  <script src="https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
   <script src="modal.js" charset="utf-8"></script>
   <script>
-    const showBtn = document.getElementsByClassName('button')[];
-    showBtn.addEventListener('click', () => {
-      modal({
+    document.addEventListener('DOMContentLoaded', () => {
+      createModel({
         message: 'Ba-ba-ba-ba-ba-nana, ba-ba-ba-ba-ba-nana',
         parentSelector: '#container',
         callback: () => { console.log('modal closed') }

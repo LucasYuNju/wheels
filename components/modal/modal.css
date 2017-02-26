@@ -9,30 +9,32 @@
 }
 
 .modal .modal-content {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
   margin: auto;
   width: 400px;
+  height: 200px;
   background: white;
   border-radius: 4px;
   box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
 }
 
-.modal .modal-content .modal-header {
+.modal .modal-content .message {
   padding: 20px;
+  flex-grow: 1;
 }
 
-.modal .modal-content .modal-body {
-  border-top: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
-  padding: 20px;
+.modal .modal-content .buttons {
+  border-top: 1px solid black;
+  height: 40px;
+  /*float: right;*/
 }
 
-.modal .modal-content .modal-footer {
-  padding: 20px;
-  text-align: right;
-}
-
-.modal .modal-content .modal-footer button {
-}
-
-button {
+.modal .modal-content .buttons button {
+  float: right;
 }
