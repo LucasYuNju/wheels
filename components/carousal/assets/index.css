@@ -14,7 +14,8 @@
 
 #slides {
     position: absolute;
-    width:300%;
+    width:500%;
+    left: -440px;
     height:100%;
     list-style: none;
 }
@@ -25,11 +26,13 @@
     float: left;
 }
 
-#slides li:nth-child(1) {
+
+/* 3 => 1 => 2 => 3 => 1 */
+#slides li:nth-child(1), #slides li:nth-child(4) {
     background-color: steelBlue;
 }
 
-#slides li:nth-child(2) {
+#slides li:nth-child(2), #slides li:nth-child(5) {
     background-color: gray;
 }
 
