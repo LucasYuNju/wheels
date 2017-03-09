@@ -9,6 +9,7 @@ function makeDraggable(element) {
   });
   element.addEventListener("mouseup", (e) => {
     picked = false;
+    window.e = e;
   });
   element.addEventListener("mousemove", (e) => {
     if (picked) {
