@@ -24,16 +24,34 @@
   flex-direction: column;
 }
 
-.modal .modal-content .message {
-  padding: 20px;
-  flex-grow: 1;
-}
-
-.modal .modal-content .buttons {
-  border-top: 1px solid black;
+.modal .header {
+  padding: 0 10px;
   height: 40px;
+  background: cyan;
+  position: relative;
+  line-height: 40px;
 }
 
-.modal .modal-content .buttons button {
-  float: right;
+.modal .header .close-button {
+  transform: rotate(45deg);
+  position: absolute;
+  right: 0;
+  top: 0;
+  cursor: pointer;
+  font-size: 28px;
+}
+
+.modal .message {
+  padding: 10px;
+  flex-grow: 1;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+}
+
+.modal .buttons {
+  padding: 0 10px;
+  height: 40px;
+  display: flex;
+  flex-flow: row-reverse;
+  align-items: center;
 }
