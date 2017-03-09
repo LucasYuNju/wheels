@@ -8,40 +8,37 @@ html, body {
     padding: 0;
 }
 
-#search-wrapper {
+#container {
     width: 200px;
     height: 300px;
     position: relative;
     margin: 50px auto;
 }
 
-#search-input {
+input {
     width: 200px;
     height: 20px;
 }
 
-#suggest-wrapper {
-    position: absolute;
-    left: 0;
-    top: 25px;
-    width: 200px;
-    height: 250px;
-    overflow-y: scroll;
+#suggestions {
+  position: absolute;
+  left: 0;
+  top: 25px;
+  width: 200px;
+  max-height: 250px;
+  overflow-y: scroll;
+  list-style: none;
+  z-index: 100;
 }
 
-#suggest-list {
-    list-style: none;
-    z-index: 100;
-}
-
-#suggest-list li a {
+#suggestions li a {
     text-decoration: none;
 }
 
-#suggest-list li a span {
+#suggestions li a span {
     background-color: cyan;
 }
 
 .selected {
-  background: blue;
+  background: cyan;
 }

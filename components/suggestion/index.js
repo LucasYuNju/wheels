@@ -2,26 +2,26 @@ $(() => {
   let data = [];
   for(let k in window) data.push(k);
 
-  const $input = $("#search-input");
-  const $container = $("#suggest-list");
+  const $input = $("#input");
+  const $container = $("#suggestions");
   let selected = -1;
 
   function selectNext() {
     const length = $container.children().length;
     if (selected + 1 < length) {
       selected++;
-      reselect();
+      _updateSelection();
     }
   }
 
   function selectPrev() {
     if (selected - 1 >= 0) {
       selected--;
-      reselect();
+      _updateSelection();
     }
   }
 
-  function reselect() {
+  function _updateSelection() {
     $container.children().removeClass("selected");
     $container.children().eq(selected).addClass("selected");
     const text = $container.children().eq(selected).text();
@@ -29,6 +29,7 @@ $(() => {
   }
 
   $input.on("input", (e) => {
+    selected = -1;
     const input = $input.val();
     const suggestions = [];
     if(input) {
@@ -58,7 +59,7 @@ $(() => {
         selectNext();
         break;
     }
-  })
+  });
 });
 
 // http://www.cnblogs.com/rubylouvre/archive/2012/02/16/2353615.html
