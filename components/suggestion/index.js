@@ -46,8 +46,6 @@ $(() => {
 
   $input.on("keydown", e => {
     switch(e.keyCode) {
-      case 13:
-        // enter
       case 38:
         // up
         e.preventDefault();
