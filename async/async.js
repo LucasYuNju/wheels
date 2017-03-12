@@ -1,48 +1,35 @@
-/*
-async function func() {
-    const result = await new Promise((resolve, reject) => {
-        setTimeout(() => {
-            resolve(1);
-        }, 1000);
-    });
-    console.log(result);
-}
-*/
-
 /**
  * generator实现的等价的函数
  */
 function func() {
     return autoExecute(function *() {
-        const result = yield new Promise((resolve, reject) => {
+        const a = yield new Promise((resolve, reject) => {
             setTimeout(() => {
                 resolve(1);
             }, 1000);
         });
-        console.log("result", result);
+        const b = yield new Promise((resolve, reject) => {
+            resolve(2);
+        });
+        console.log("sum", a + b);
     });
 }
 
 /**
  * Promise executor
  */
-function autoExecute(genF) {
+function autoExecute(generator) {
     return new Promise((resolve, reject) => {
-        const generator = genF();
+        const iterator = generator();
         function doNext(func) {
-            let next = null;
-            try {
-                next = func();
-            } catch (e) {
-                reject(e);
-            }
+            let next = func();
             if (next.done) {
                 return resolve(next.value);
             }
-            // 这样写，可以同时处理next.value是Promise和不是Promise的情况
+            // 同时处理next.value是Promise和不是Promise的情况
             Promise.resolve(next.value).then(result => {
                 doNext(() => {
-                    return generator.next(result);
+                    return iterator.next(result);
                 });
             }, reason => {
                 doNext(() => {
@@ -51,9 +38,9 @@ function autoExecute(genF) {
             });
         }
         doNext(() => {
-            return generator.next();
+            return iterator.next();
         });
     });
 }
 
-asyncEquivalance();
+func();
