@@ -5,3 +5,4 @@ setTimeout(() => {
 module.exports = {
   a: 'foo'
 };
+console.log(global.name);

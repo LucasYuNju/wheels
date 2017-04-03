@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const runInNewContext = require('vm').runInNewContext;
+const runInThisContext = require('vm').runInThisContext;
 
 const cache = {};
 
@@ -13,19 +13,15 @@ class Module {
   require(fileName) {
     return Module.load(fileName, this).exports;
   }
+  // nodeJS的require有个特性：在一个模块中定义全局变量，其他模块也能访问到
+  // runInThisContext和eval的区别是，eval可以修改局部变量
   compile(code) {
-    const sandbox = {};
-    for (let key in global) {
-      sandbox[key] = global[key];
-    }
-    sandbox.global = sandbox;
-    sandbox.module = this;
-    sandbox.exports = this.exports;
-    sandbox.require = this.require;
-    return runInNewContext(code, sandbox);
+    const wrapper = `var xxx; xxx = function (exports, require, module) {${code}}`;
+    const compiledWrapper = runInThisContext(wrapper, {});
+
+    const args = [this.exports, this.require, this];
+    return compiledWrapper.apply(this.exports, args);
   }
-
-
 
   static resolve(name) {
     if (!path.extname(name)) {

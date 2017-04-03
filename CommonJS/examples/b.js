@@ -5,3 +5,4 @@ setTimeout(() => {
 module.exports = {
   b: 'bar'
 };
+global.name = 'b inited';
