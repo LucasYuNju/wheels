@@ -16,7 +16,7 @@ class Module {
   // nodeJS的require有个特性：在一个模块中定义全局变量，其他模块也能访问到
   // runInThisContext和eval的区别是，eval可以修改局部变量
   compile(code) {
-    const wrapper = `var xxx; xxx = function (exports, require, module) {${code}}`;
+    const wrapper = `(function (exports, require, module) {${code}})`;
     const compiledWrapper = runInThisContext(wrapper, {});
 
     const args = [this.exports, this.require, this];
